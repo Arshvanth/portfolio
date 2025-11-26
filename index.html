@@ -1,266 +1,307 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Arshvanth V — Portfolio</title>
-
+  <meta name="description" content="Arshvanth V — Computer Science Graduate. Data Science, Python, SQL, Data Visualization.">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-
   <style>
-    :root {
-      --text-dark: #1b263b;
-      --muted: #6b7280;
-      --card-bg: rgba(255, 255, 255, 0.8);
-      --radius: 14px;
-      --primary: #3b82f6;
-      --primary-gradient: linear-gradient(90deg, #3b82f6, #6366f1);
+    /* -------------------------
+       PROFESSIONAL PORTFOLIO
+       Single-file (HTML + CSS + JS)
+       Replace assets/photo.jpg and assets/Arshvanth_V_Resume.pdf
+       ------------------------- */
+    :root{
+      --bg-1:#061027;
+      --muted:#9ea9b6;
+      --card-bg: rgba(255,255,255,0.04);
+      --glass-border: rgba(255,255,255,0.08);
+      --accent1:#7c3aed;
+      --accent2:#06b6d4;
+      --radius:14px;
+      --max-width:1100px;
+      --glass-shadow: 0 8px 30px rgba(2,6,23,0.6);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;
+      color:#e9f2fb;
+      background: linear-gradient(180deg,#051027 0%, #071a2a 100%);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.45;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    /* subtle animated gradient overlay */
+    .bg-gradient {
+      position:fixed; inset:-20% -20% -20% -20%; z-index:-3;
+      background: radial-gradient(600px at 10% 20%, rgba(124,58,237,0.12), transparent 10%),
+                  radial-gradient(420px at 85% 80%, rgba(6,182,212,0.10), transparent 12%);
+      filter: blur(48px) saturate(120%);
+      pointer-events:none;
+      animation: floatBG 14s ease-in-out infinite alternate;
+      opacity:0.95;
+    }
+    @keyframes floatBG { from { transform: translateY(0px)} to { transform: translateY(60px)} }
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(160deg, #eef2f7, #d9e4f2);
-      color: var(--text-dark);
-      line-height: 1.6;
+    .wrap{ max-width:var(--max-width); margin:36px auto; padding:18px; position:relative; z-index:1 }
+
+    header{ display:flex; align-items:center; justify-content:space-between; gap:18px; flex-wrap:wrap }
+    .left{ display:flex; gap:16px; align-items:center }
+    .avatar{
+      width:96px; height:96px; border-radius:12px; overflow:hidden;
+      background:rgba(255,255,255,0.03); border:1px solid var(--glass-border);
+      box-shadow: var(--glass-shadow);
+      flex-shrink:0;
+    }
+    .avatar img{ width:100%; height:100%; object-fit:cover; display:block }
+
+    h1{ font-size:22px; margin:0 0 4px 0; letter-spacing:0.2px }
+    .subtitle{ color:var(--muted); font-size:13px; margin-bottom:6px }
+    .contact-line{ color:var(--muted); font-size:13px }
+
+    nav{ display:flex; gap:8px; align-items:center }
+    nav a{
+      color:var(--muted); padding:8px 11px; border-radius:8px; font-weight:600; font-size:13px;
+      transition:background .15s, color .15s;
+    }
+    nav a:hover, nav a:focus{ background:rgba(255,255,255,0.04); color:#fff; outline:none }
+
+    .controls{ display:flex; gap:8px; align-items:center; margin-top:8px; flex-wrap:wrap }
+    .btn{
+      display:inline-block; padding:10px 14px; border-radius:10px; font-weight:700; cursor:pointer; text-decoration:none;
+      border:1px solid transparent;
+    }
+    .btn.primary{ background: linear-gradient(90deg,var(--accent1),var(--accent2)); color:#fff; box-shadow:0 8px 24px rgba(6,22,60,0.45) }
+    .btn.ghost{ background:transparent; color:var(--muted); border:1px solid rgba(255,255,255,0.04) }
+
+    /* layout */
+    .grid{ display:grid; grid-template-columns:1fr 320px; gap:20px; margin-top:26px; align-items:start }
+    .card{
+      background:var(--card-bg); padding:18px; border-radius:var(--radius);
+      border:1px solid var(--glass-border); backdrop-filter: blur(8px); box-shadow:var(--glass-shadow);
     }
 
-    a { text-decoration: none; color: inherit; }
+    /* projects */
+    .projects{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin-top:12px }
+    .project{ padding:14px; border-radius:12px; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.008));
+      border:1px solid rgba(255,255,255,0.03); transition: transform .16s ease, box-shadow .16s ease }
+    .project:hover{ transform:translateY(-6px); box-shadow:0 16px 40px rgba(2,6,23,0.6) }
 
-    .wrap {
-      max-width: 1100px;
-      margin: 28px auto;
-      padding: 0 16px;
+    /* resume preview */
+    .resume-frame{ height:320px; overflow:hidden; border-radius:10px; background:rgba(255,255,255,0.01) }
+
+    /* contact form */
+    .form-row{ display:flex; gap:10px; margin-top:8px; flex-wrap:wrap }
+    .input, textarea{ width:100%; padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.06); background:rgba(0,0,0,0.18); color:#fff; font-size:14px }
+    textarea{ min-height:110px; resize:vertical }
+
+    .small{ font-size:13px; color:var(--muted) }
+
+    footer{ margin-top:34px; text-align:center; color:var(--muted); font-size:13px }
+
+    /* sticky contact (mobile) */
+    .sticky-contact{
+      display:none;
+      position:fixed; left:16px; right:16px; bottom:18px; z-index:60;
+      justify-content:space-between; gap:10px; align-items:center;
+      padding:10px; border-radius:12px; background:linear-gradient(90deg, rgba(12,18,38,0.9), rgba(6,12,24,0.9));
+      border:1px solid rgba(255,255,255,0.04); box-shadow:0 10px 30px rgba(2,6,23,0.6)
     }
+    .sticky-contact .left { display:flex; gap:10px; align-items:center }
+    .sticky-contact .left img{ width:44px; height:44px; border-radius:8px; object-fit:cover }
 
-    /* Header */
-    header {
-      display: flex;
-      justify-content: space-between;
-      gap: 20px;
-      flex-wrap: wrap;
-      align-items: center;
+    /* responsive */
+    @media (max-width:880px){
+      .grid{ grid-template-columns:1fr; }
+      header{ gap:14px; align-items:flex-start }
+      .avatar{ width:84px; height:84px }
     }
-
-    .left {
-      display: flex;
-      gap: 16px;
-      align-items: center;
-      flex: 1 1 300px;
-    }
-
-    .avatar {
-      width: 96px;
-      height: 96px;
-      border-radius: var(--radius);
-      overflow: hidden;
-      background: #dbe4f4;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    .avatar img { width: 100%; height: 100%; object-fit: cover; }
-
-    h1 {
-      font-size: 28px;
-      color: #0f172a;
-      margin-bottom: 4px;
-      font-weight: 800;
-    }
-
-    .lead { color: var(--muted); font-size: 14px; }
-    .muted { color: var(--muted); font-size: 13px; }
-
-    nav {
-      display: flex;
-      gap: 12px;
+    @media (max-width:520px){
+      h1{ font-size:20px }
+      .controls{ width:100% }
+      .sticky-contact{ display:flex }
+      .wrap{ padding-bottom:86px } /* room for sticky bar */
     }
 
-    nav a {
-      padding: 8px 14px;
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-      transition: 0.2s;
-    }
-    nav a:hover {
-      background: #eff6ff;
-      color: #2563eb;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 10px 14px;
-      border-radius: 10px;
-      font-weight: 600;
-      text-align: center;
-    }
-    .primary {
-      background: var(--primary-gradient);
-      color: white;
-      box-shadow: 0 4px 10px rgba(59,130,246,0.3);
-    }
-
-    /* Layout */
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 320px;
-      gap: 20px;
-      margin-top: 28px;
-    }
-
-    main, aside { display: flex; flex-direction: column; gap: 20px; }
-
-    /* Card Styling */
-    .card {
-      background: var(--card-bg);
-      padding: 20px;
-      border-radius: var(--radius);
-      box-shadow: 0 6px 14px rgba(0,0,0,0.08);
-      backdrop-filter: blur(10px);
-    }
-
-    /* Highlight Headings */
-    h3, h4 {
-      color: #1d3557;
-      border-left: 5px solid var(--primary);
-      padding-left: 10px;
-      margin-bottom: 10px;
-      font-weight: 700;
-    }
-
-    /* Projects */
-    .projects {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 16px;
-    }
-
-    .project {
-      padding: 16px;
-      border-radius: 10px;
-      background: white;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.07);
-      transition: 0.2s;
-    }
-    .project:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.12);
-    }
-
-    footer {
-      margin-top: 40px;
-      text-align: center;
-      font-size: 13px;
-      color: #6b7280;
-    }
-
-    @media(max-width: 880px){
-      .grid { grid-template-columns: 1fr; }
-    }
+    /* focus */
+    a:focus, button:focus, input:focus, textarea:focus { outline:3px solid rgba(124,58,237,0.12); outline-offset:2px }
   </style>
 </head>
-
 <body>
-  <div class="wrap">
+  <!-- decorative animated gradient -->
+  <div class="bg-gradient" aria-hidden="true"></div>
 
-    <!-- HEADER -->
+  <div class="wrap" role="main">
     <header>
       <div class="left">
-        <div class="avatar"><img src="assets/photo.jpg"></div>
-
+        <div class="avatar"><img src="assets/photo.jpg" alt="Arshvanth V — photo"></div>
         <div>
           <h1>Arshvanth V</h1>
-          <div class="lead">Computer Science Graduate • Data Science • Python | SQL | Data Visualization</div>
-          <div class="muted">Ambur, Vellore Dist. • +91 96770 26197 • arshvanthv@gmail.com</div>
+          <div class="subtitle">Computer Science Graduate • Data Science • Python · SQL · Data Visualization</div>
+          <div class="contact-line">Ambur, Vellore Dist. • +91 96770 26197 • <a href="mailto:arshvanthv@gmail.com" style="color:inherit">arshvanthv@gmail.com</a></div>
 
-          <div style="margin-top:10px;">
+          <div class="controls" aria-hidden="false" style="margin-top:10px">
             <a class="btn primary" href="assets/Arshvanth_V_Resume.pdf" download>Download Resume</a>
-            <a class="btn" href="https://www.linkedin.com/in/arshvanth-v" target="_blank">LinkedIn</a>
+            <a class="btn ghost" href="https://www.linkedin.com/in/arshvanth-v" target="_blank" rel="noopener">LinkedIn</a>
           </div>
         </div>
       </div>
 
-      <nav>
+      <nav aria-label="Primary navigation">
         <a href="#about">About</a>
         <a href="#projects">Projects</a>
         <a href="#contact">Contact</a>
       </nav>
     </header>
 
-    <!-- GRID BODY -->
     <div class="grid">
-
+      <!-- MAIN -->
       <main>
-        <!-- ABOUT -->
-        <section id="about" class="card">
-          <h3>About Me</h3>
-          <p class="muted">
-            I am a curious and dedicated Computer Science graduate with strong interest in data science & analytics.
-            I love transforming raw datasets into insightful visualizations and meaningful results.
+        <section id="about" class="card" aria-labelledby="about-heading">
+          <h3 id="about-heading" style="margin:0">About Me</h3>
+          <p class="small" style="margin-top:10px">
+            I am a curious and dedicated Computer Science graduate with a strong interest in data science and programming.
+            I enjoy solving real problems by turning raw data into actionable insights using Python, SQL and visualization tools.
           </p>
 
-          <h4>Skills</h4>
-          <div class="muted">Python, Pandas, NumPy, SQL, MySQL, Matplotlib, Seaborn, Excel, Data Cleaning, OOPs</div>
+          <h4 style="margin-top:18px">Skills</h4>
+          <div class="small">Python · Pandas · NumPy · SQL / MySQL · Data Analysis · Matplotlib / Plotly · Excel · Data Cleaning</div>
 
-          <h4>Experience</h4>
-          <div class="muted">
-            <strong>CodTech — Data Science Intern</strong> (Oct 2024 - Dec 2024)<br>
-            Worked on community health evaluation, analyzing 10,000+ data points and building dashboards.
+          <h4 style="margin-top:18px">Experience</h4>
+          <div class="small">
+            <strong>CodTech — Data Science Intern</strong> (Oct 2024 – Dec 2024)<br>
+            Cleaned & analyzed 10,000+ health records, built dashboards and presented findings to the team.
           </div>
-          <br>
-          <div class="muted">
-            <strong>Hybritic Info — Data Science Intern</strong> (Aug 2024 - Sep 2024)<br>
-            Performed EDA on recruitment data with automated report generation.
+          <div style="height:8px"></div>
+          <div class="small">
+            <strong>Hybritic Info — Data Science Intern</strong> (Aug 2024 – Sep 2024)<br>
+            Performed campus recruitment analysis and automated reporting using Python and Excel.
           </div>
         </section>
 
-        <!-- PROJECTS -->
-        <section id="projects" class="card">
-          <h3>Selected Projects</h3>
-          <div class="projects" id="projects"></div>
+        <section id="projects" class="card" aria-labelledby="projects-heading">
+          <h3 id="projects-heading" style="margin:0">Selected Projects</h3>
+          <div class="projects" id="projects-list" style="margin-top:12px" aria-live="polite"></div>
         </section>
       </main>
 
-      <!-- SIDE -->
+      <!-- SIDEBAR -->
       <aside>
-        <div class="card">
-          <h4>Resume Preview</h4>
-          <embed src="assets/Arshvanth_V_Resume.pdf#view=FitH" width="100%" height="300px" />
+        <div class="card" aria-labelledby="resume-heading">
+          <h4 id="resume-heading" style="margin:0">Resume Preview</h4>
+          <div class="resume-frame" style="margin-top:10px">
+            <embed src="assets/Arshvanth_V_Resume.pdf#view=FitH" type="application/pdf" width="100%" height="100%" />
+          </div>
+          <p class="small" style="margin-top:8px">If preview doesn't load, <a class="small" href="assets/Arshvanth_V_Resume.pdf" download>download the resume</a>.</p>
         </div>
 
-        <div class="card" id="contact">
-          <h4>Contact</h4>
-          <div class="muted">📧 arshvanthv@gmail.com</div>
-          <div class="muted">📞 +91 96770 26197</div>
-          <br>
-          <a class="btn primary" href="mailto:arshvanthv@gmail.com">Email Me</a>
+        <div id="contact" class="card" aria-labelledby="contact-heading">
+          <h4 id="contact-heading" style="margin:0">Contact</h4>
+          <div class="small" style="margin-top:8px">Email: <a href="mailto:arshvanthv@gmail.com" style="color:inherit">arshvanthv@gmail.com</a></div>
+          <div class="small">Phone: +91 96770 26197</div>
+
+          <!-- contact form that opens mail client -->
+          <form id="contact-form" style="margin-top:12px" aria-label="Contact form">
+            <div class="form-row">
+              <input id="name" class="input" type="text" placeholder="Your name" required />
+            </div>
+            <div class="form-row" style="margin-top:8px">
+              <input id="email" class="input" type="email" placeholder="Your email" required />
+            </div>
+            <div style="margin-top:8px">
+              <textarea id="message" placeholder="Write your message..." required></textarea>
+            </div>
+            <div class="form-row" style="margin-top:10px; justify-content:flex-start; align-items:center">
+              <button type="submit" class="btn primary">Send message</button>
+              <a class="btn ghost" id="mailto-btn" href="mailto:arshvanthv@gmail.com" target="_blank" rel="noopener">Email me</a>
+            </div>
+            <div class="small" style="margin-top:8px">The form will open your email client to send the message (no server required).</div>
+          </form>
         </div>
       </aside>
-
     </div>
 
-    <footer>© 2025 — Arshvanth V. Built for job applications.</footer>
+    <footer>© 2025 — Arshvanth V. Portfolio for job applications & recruiters.</footer>
+  </div>
 
+  <!-- sticky mobile contact bar -->
+  <div class="sticky-contact" role="region" aria-label="Quick contact">
+    <div class="left">
+      <img src="assets/photo.jpg" alt="Arshvanth" />
+      <div style="font-size:14px">
+        <div style="font-weight:700">Hire / Contact</div>
+        <div class="small" style="opacity:0.9">arshvanthv@gmail.com</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <a class="btn ghost" href="mailto:arshvanthv@gmail.com" target="_blank" rel="noopener">Email</a>
+      <a class="btn primary" href="assets/Arshvanth_V_Resume.pdf" download>Resume</a>
+    </div>
   </div>
 
   <script>
+    // -------------------------
+    // Projects (update repo URLs if needed)
+    // -------------------------
     const projects = [
-      {title: 'Community Health Evaluation', desc: 'Data cleaning & analysis of 10,000+ records.', repo: 'https://github.com/Arshvanth/Community-health-Evaluation---EDA'},
-      {title: 'Campus Recruitment Analysis', desc: 'EDA + automated report generation.', repo: 'https://github.com/Arshvanth/Campus-Recruitment'},
-      {title: 'Titanic Classification', desc: 'ML-based prediction model with visualizations.', repo: 'https://github.com/Arshvanth/CodeAlpha_Project_Titanic-Classification'}
+      { title: 'Community Health Evaluation (CodTech)', desc: 'Data cleaning, EDA and dashboards for 10,000+ records; insights & recommendations.', repo: 'https://github.com/Arshvanth/Community-health-Evaluation---EDA' },
+      { title: 'Campus Recruitment Analysis (Hybritic Info)', desc: 'EDA and automated reporting across 5 years of recruitment data.', repo: 'https://github.com/Arshvanth/Campus-Recruitment' },
+      { title: 'Titanic Classification (CodeAlpha)', desc: 'Survival prediction and visual story using ML & Plotly.', repo: 'https://github.com/Arshvanth/CodeAlpha_Project_Titanic-Classification' }
     ];
 
-    const container = document.getElementById("projects");
+    const list = document.getElementById('projects-list');
     projects.forEach(p => {
-      container.innerHTML += `
-        <div class="project">
-          <h4>${p.title}</h4>
-          <p class="muted">${p.desc}</p>
-          <br>
-          <a class="btn primary" href="${p.repo}" target="_blank">View on GitHub</a>
-        </div>`;
+      const el = document.createElement('div');
+      el.className = 'project';
+      el.innerHTML = `
+        <h4 style="margin:0 0 6px">${escapeHtml(p.title)}</h4>
+        <div class="small" style="color:var(--muted)">${escapeHtml(p.desc)}</div>
+        <div style="margin-top:10px">
+          <a class="btn primary" href="${p.repo}" target="_blank" rel="noopener">View on GitHub</a>
+        </div>
+      `;
+      list.appendChild(el);
+    });
+
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;' }[c]));
+    }
+
+    // -------------------------
+    // Contact form -> mailto
+    // -------------------------
+    const form = document.getElementById('contact-form');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const from = document.getElementById('email').value.trim();
+      const msg = document.getElementById('message').value.trim();
+      if(!name || !from || !msg){ alert('Please fill all fields.'); return; }
+      const subject = `Portfolio message from ${name}`;
+      const body = `Name: ${name}%0D%0AEmail: ${from}%0D%0A%0D%0A${encodeURIComponent(msg)}`;
+      const mailto = `mailto:arshvanthv@gmail.com?subject=${encodeURIComponent(subject)}&body=${body}`;
+      window.location.href = mailto;
+    });
+
+    // -------------------------
+    // Reduce motion preference
+    // -------------------------
+    if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      document.querySelector('.bg-gradient').style.animation = 'none';
+    }
+
+    // -------------------------
+    // Accessibility: focus first heading when hash changes
+    // -------------------------
+    window.addEventListener('hashchange', () => {
+      const id = location.hash.slice(1);
+      const el = document.getElementById(id);
+      if(el) el.focus({preventScroll:false});
     });
   </script>
-
 </body>
 </html>
