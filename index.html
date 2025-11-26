@@ -1,320 +1,338 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Arshvanth V — Portfolio</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-
   <style>
-    :root {
-      --radius: 16px;
-      --muted: #b9c4d3;
-      --card-bg: rgba(255, 255, 255, 0.06);
-      --border: rgba(255, 255, 255, 0.12);
-      --primary: linear-gradient(90deg, #7c3aed, #06b6d4);
+    :root{
+      --radius:16px;
+      --muted:#b9c4d3;
+      --card-bg: rgba(255,255,255,0.06);
+      --border: rgba(255,255,255,0.12);
+      --accent1:#7c3aed;
+      --accent2:#06b6d4;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;
+      color:#e7f0fb;
+      background:#050c1a;
+      overflow-y:auto;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      transition:background 400ms ease;
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    /* ------------------------------ */
-    /*    ELEGANT ANIMATED BACKGROUND */
-    /* ------------------------------ */
-
-    body {
-      font-family: "Inter", sans-serif;
-      color: #e7f0fb;
-      overflow-x: hidden;
-      position: relative;
-      min-height: 100vh;
-      background: radial-gradient(circle at top, #0b1d39, #050d1e 70%);
+    /* -------------------------
+       Background mode classes
+       ------------------------- */
+    /* default: animated gradient */
+    body.mode-gradient{
+      background: linear-gradient(120deg,#08102a,#071a3a,#071a3a);
+      background-size:400% 400%;
+      animation:gradMove 14s ease infinite;
+    }
+    @keyframes gradMove{
+      0%{background-position:0% 50%}
+      50%{background-position:100% 50%}
+      100%{background-position:0% 50%}
     }
 
-    /* Animated gradient circles */
-    .bg-circle {
-      position: absolute;
-      width: 600px;
-      height: 600px;
-      border-radius: 50%;
-      filter: blur(120px);
-      opacity: 0.45;
-      animation: float 12s infinite alternate ease-in-out;
-      z-index: -2;
+    /* particles overlay */
+    .particles-layer{ position:fixed; inset:0; pointer-events:none; z-index:-1; opacity:0; transition:opacity 300ms;}
+    body.mode-particles .particles-layer{ opacity:1 }
+    .particles-layer::before,
+    .particles-layer::after{
+      content:""; position:absolute; inset:0;
+      background-repeat:no-repeat;
+      background-size:cover;
+      mix-blend-mode: screen;
+      filter: blur(36px) saturate(120%);
     }
-    .c1 { background: #2f3ff3; top: -120px; left: -120px; }
-    .c2 { background: #3ad2e0; bottom: -160px; right: -160px; animation-delay: 4s; }
-
-    @keyframes float {
-      0% { transform: translateY(0px); }
-      100% { transform: translateY(70px); }
+    .particles-layer::before{
+      background-image:
+        radial-gradient(circle at 10% 20%, rgba(124,58,237,0.18) 0 8%, transparent 20%),
+        radial-gradient(circle at 80% 70%, rgba(6,182,212,0.14) 0 12%, transparent 24%);
+      transform:translateY(-20px);
+      opacity:0.95;
     }
-
-    /* soft glowing particles */
-    .dots {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background: url("https://i.ibb.co/4JK2Y3C/dots.png");
-      opacity: 0.35;
-      z-index: -1;
+    .particles-layer::after{
+      background-image: radial-gradient(circle at 40% 40%, rgba(255,255,255,0.03), transparent 30%);
+      transform:translateY(10px);
+      opacity:0.55;
     }
 
-    /* ------------------------------ */
-    /*           GLOBAL UI            */
-    /* ------------------------------ */
+    /* neon blobs (glassmorphism) */
+    .neon-blob { position:fixed; border-radius:50%; filter:blur(110px); opacity:0; z-index:-2; transition:opacity 300ms;}
+    body.mode-neon .neon-blob{ opacity:1 }
+    .blob-a{ width:520px;height:520px; background:var(--accent1); top:-160px; left:-160px; }
+    .blob-b{ width:420px;height:420px; background:var(--accent2); bottom:-140px; right:-120px; opacity:0.7 }
 
-    .wrap {
-      max-width: 1100px;
-      margin: 40px auto;
-      padding: 0 18px;
+    /* overall page wrapper */
+    .wrap{ max-width:1100px; margin:36px auto; padding:0 18px; position:relative; z-index:1; }
+
+    header{ display:flex; flex-wrap:wrap; gap:18px; align-items:center; justify-content:space-between; }
+    .left{ display:flex; gap:16px; align-items:center; flex:1 1 300px; }
+    .avatar{ width:100px; height:100px; border-radius:var(--radius); overflow:hidden; background:rgba(255,255,255,0.03); border:1px solid var(--border); flex-shrink:0; }
+    .avatar img{ width:100%; height:100%; object-fit:cover; display:block; }
+    h1{ font-size:24px; margin-bottom:4px; }
+    .lead{ color:var(--muted); font-size:14px; margin-bottom:6px; }
+    .muted{ color:var(--muted); font-size:13px; }
+
+    nav{ display:flex; gap:10px; align-items:center; flex-shrink:0; }
+    nav a{ color:var(--muted); padding:8px 10px; border-radius:8px; transition: background .18s; font-weight:600; font-size:13px; }
+    nav a:hover{ background: rgba(255,255,255,0.04); color: #fff }
+
+    /* background switcher */
+    .bg-switcher{ display:flex; gap:8px; }
+    .bg-btn{ padding:8px 10px; border-radius:8px; font-weight:700; cursor:pointer; background:rgba(255,255,255,0.03); color:var(--muted); border:1px solid transparent }
+    .bg-btn.active{ background:linear-gradient(90deg,var(--accent1),var(--accent2)); color:#fff; box-shadow:0 6px 22px rgba(4,12,32,0.45) }
+
+    .controls-row{ display:flex; gap:10px; align-items:center; margin-top:8px; flex-wrap:wrap; }
+
+    .btn{ display:inline-block; padding:10px 14px; border-radius:10px; font-weight:700; text-decoration:none; cursor:pointer; }
+    .btn.primary{ background:linear-gradient(90deg,var(--accent1),var(--accent2)); color:#fff; border: none; }
+    .btn.ghost{ background:transparent; color:var(--muted); border:1px solid rgba(255,255,255,0.04); }
+
+    /* layout grid */
+    .grid{ display:grid; grid-template-columns: 1fr 320px; gap:20px; margin-top:28px; align-items:start; }
+    main, aside{ display:flex; flex-direction:column; gap:14px; }
+
+    .card{ background:var(--card-bg); padding:18px; border-radius:var(--radius); backdrop-filter: blur(10px); border:1px solid var(--border); box-shadow:0 6px 30px rgba(4,12,32,0.45); }
+
+    .projects{ display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap:14px; margin-top:12px; }
+    .project{ padding:12px; border-radius:12px; background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)); transition:transform .16s ease, box-shadow .16s ease; border:1px solid rgba(255,255,255,0.04) }
+    .project:hover{ transform:translateY(-6px); box-shadow:0 10px 30px rgba(2,6,23,0.6) }
+
+    /* resume preview */
+    .resume-frame{ height:320px; overflow:hidden; border-radius:12px; background:rgba(255,255,255,0.02); display:block }
+
+    /* contact form */
+    .form-row{ display:flex; gap:10px; margin-top:8px; flex-wrap:wrap }
+    .input, textarea{ width:100%; padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.06); background:rgba(0,0,0,0.18); color:#fff; outline:none; font-size:14px }
+    textarea{ min-height:110px; resize:vertical }
+    .small{ font-size:13px; color:var(--muted) }
+
+    footer{ margin-top:36px; text-align:center; color:var(--muted); font-size:13px; }
+
+    /* responsive */
+    @media (max-width:880px){
+      .grid{ grid-template-columns: 1fr; }
+      header{ flex-direction:column; align-items:flex-start; gap:14px }
+      .avatar{ width:88px; height:88px }
+      nav{ order:3 }
+    }
+    @media (max-width:520px){
+      h1{ font-size:20px }
+      .left{ gap:12px }
+      .controls-row{ width:100% }
+      .bg-switcher{ order:2; width:100% }
     }
 
-    h1, h3, h4 { font-weight: 700; }
-
-    .card {
-      background: var(--card-bg);
-      padding: 20px;
-      border-radius: var(--radius);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--border);
-      box-shadow: 0 4px 22px rgba(0,0,0,0.25);
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 10px 16px;
-      border-radius: 10px;
-      font-weight: 700;
-      margin-top: 6px;
-      backdrop-filter: blur(6px);
-    }
-
-    .primary { background: var(--primary); color: #fff; }
-    a { text-decoration: none; color: inherit; }
-
-    /* ------------------------------ */
-    /*             HEADER             */
-    /* ------------------------------ */
-
-    header {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 18px;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .left {
-      display: flex;
-      gap: 16px;
-      align-items: center;
-      flex: 1 1 300px;
-    }
-
-    .avatar {
-      width: 100px;
-      height: 100px;
-      border-radius: var(--radius);
-      overflow: hidden;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.05);
-      flex-shrink: 0;
-    }
-
-    .avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    nav {
-      display: flex;
-      gap: 10px;
-    }
-
-    nav a {
-      padding: 8px 12px;
-      border-radius: 8px;
-      transition: 0.2s;
-    }
-    nav a:hover {
-      background: rgba(255,255,255,0.1);
-    }
-
-    /* ------------------------------ */
-    /*             GRID               */
-    /* ------------------------------ */
-
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 320px;
-      gap: 20px;
-      margin-top: 30px;
-    }
-
-    .projects {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-      margin-top: 12px;
-    }
-
-    .project {
-      padding: 16px;
-      border-radius: 12px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.1);
-      transition: 0.2s;
-    }
-
-    .project:hover {
-      transform: translateY(-4px);
-      background: rgba(255,255,255,0.08);
-    }
-
-    footer {
-      margin-top: 35px;
-      text-align: center;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    /* ------------------------------ */
-    /*           RESPONSIVE           */
-    /* ------------------------------ */
-
-    @media (max-width: 880px) {
-      .grid { grid-template-columns: 1fr; }
-      header { flex-direction: column; align-items: flex-start; }
-    }
-
-    @media (max-width: 500px) {
-      .avatar { width: 80px; height: 80px; }
-      h1 { font-size: 22px; }
-    }
+    /* accessible focus styles */
+    a:focus, button:focus, .bg-btn:focus { outline:3px solid rgba(124,58,237,0.18); outline-offset:2px; }
   </style>
 </head>
+<body class="mode-gradient">
 
-<body>
+  <!-- Background decoration layers -->
+  <div class="particles-layer" aria-hidden="true"></div>
+  <div class="neon-blob blob-a" aria-hidden="true"></div>
+  <div class="neon-blob blob-b" aria-hidden="true"></div>
 
-  <!-- Animated background layers -->
-  <div class="bg-circle c1"></div>
-  <div class="bg-circle c2"></div>
-  <div class="dots"></div>
+  <div class="wrap" role="main">
 
-  <div class="wrap">
-
-    <!-- HEADER -->
+    <!-- Header -->
     <header>
       <div class="left">
-        <div class="avatar"><img src="assets/photo.jpg" alt="Arshvanth V"></div>
+        <div class="avatar card"><img src="assets/photo.jpg" alt="Arshvanth V — photo"></div>
         <div>
           <h1>Arshvanth V</h1>
-          <div style="color:var(--muted)">Computer Science Graduate • Data Science</div>
-          <div class="muted">Ambur, Vellore • +91 96770 26197 • arshvanthv@gmail.com</div>
+          <div class="lead">Computer Science Graduate • Data Science • Python | SQL | Data Visualization</div>
+          <div class="muted">Ambur, Vellore Dist. • +91 96770 26197 • arshvanthv@gmail.com</div>
 
-          <div style="margin-top:10px">
+          <div class="controls-row">
             <a class="btn primary" href="assets/Arshvanth_V_Resume.pdf" download>Download Resume</a>
-            <a class="btn" href="https://www.linkedin.com/in/arshvanth-v" target="_blank">LinkedIn</a>
+            <a class="btn ghost" href="https://www.linkedin.com/in/arshvanth-v" target="_blank" rel="noopener">LinkedIn</a>
+            <div class="bg-switcher" style="margin-left:8px" role="tablist" aria-label="Background style switch">
+              <button class="bg-btn active" data-mode="mode-gradient" title="Animated gradient">Gradient</button>
+              <button class="bg-btn" data-mode="mode-particles" title="Floating particles">Particles</button>
+              <button class="bg-btn" data-mode="mode-neon" title="Neon glass (glassmorphism)">Neon</button>
+            </div>
           </div>
         </div>
       </div>
 
-      <nav>
+      <nav aria-label="Primary navigation">
         <a href="#about">About</a>
         <a href="#projects">Projects</a>
         <a href="#contact">Contact</a>
       </nav>
     </header>
 
-    <!-- CONTENT GRID -->
+    <!-- Content -->
     <div class="grid">
 
-      <!-- MAIN -->
+      <!-- Main column -->
       <main>
 
-        <!-- ABOUT -->
-        <section id="about" class="card">
-          <h3>About Me</h3>
-          <p class="muted" style="margin-top:6px">
-            I am a curious and dedicated Computer Science graduate with strong interest in data science & programming.
-            I love converting raw data into meaningful insights using Python, Visualization and Analytics.
+        <section id="about" class="card" aria-labelledby="about-heading">
+          <h3 id="about-heading">About Me</h3>
+          <p class="muted" style="margin-top:8px">
+            I am a curious and dedicated Computer Science graduate with a strong interest in data science and programming.
+            I enjoy turning raw data into actionable insights — using Python, SQL and visualizations to tell the story.
           </p>
 
-          <h4 style="margin-top:18px">Skills</h4>
-          <div class="muted">Python, Pandas, NumPy, SQL, EDA, Dashboards, Excel, Visualization</div>
+          <h4 style="margin-top:16px">Skills</h4>
+          <div class="muted">Python · Pandas · NumPy · SQL / MySQL · Data Analysis · Matplotlib / Plotly · Excel · Data Cleaning</div>
 
-          <h4 style="margin-top:18px">Experience</h4>
+          <h4 style="margin-top:16px">Experience</h4>
           <div class="muted">
-            <strong>CodTech — Data Science Intern</strong> (Oct–Dec 2024)<br>
-            Worked on 10,000+ health records, cleaned, processed and visualized datasets.
+            <strong>CodTech — Data Science Intern</strong> (Oct 2024 – Dec 2024)<br>
+            Worked on community health evaluation: cleaned & analyzed 10,000+ records, built dashboards and presented insights.
           </div>
-          <div style="height:10px"></div>
+          <div style="height:8px"></div>
           <div class="muted">
-            <strong>Hybritic Info — Data Science Intern</strong> (Aug–Sep 2024)<br>
-            Analyzed campus recruitment datasets & automated reporting.
+            <strong>Hybritic Info — Data Science Intern</strong> (Aug 2024 – Sep 2024)<br>
+            Performed campus recruitment analysis and automated reporting using Python & Excel.
           </div>
         </section>
 
-        <!-- PROJECTS -->
-        <section id="projects" class="card">
-          <h3>Selected Projects</h3>
-          <div class="projects" id="projects"></div>
+        <section id="projects" class="card" aria-labelledby="projects-heading">
+          <h3 id="projects-heading">Selected Projects</h3>
+          <div class="projects" id="projects-list" aria-live="polite"></div>
         </section>
 
       </main>
 
-      <!-- SIDEBAR -->
+      <!-- Sidebar -->
       <aside>
 
-        <!-- RESUME PREVIEW -->
-        <div class="card">
-          <h4>Resume Preview</h4>
-          <div style="height:320px;overflow:hidden;border-radius:12px;margin-top:10px;">
-            <embed src="assets/Arshvanth_V_Resume.pdf#view=FitH" width="100%" height="100%">
+        <div class="card" aria-labelledby="resume-heading">
+          <h4 id="resume-heading">Resume Preview</h4>
+          <div class="resume-frame" style="margin-top:10px">
+            <embed src="assets/Arshvanth_V_Resume.pdf#view=FitH" type="application/pdf" width="100%" height="100%" />
           </div>
+          <p class="small" style="margin-top:8px">If preview doesn't load, <a class="small" href="assets/Arshvanth_V_Resume.pdf" download>download the resume</a>.</p>
         </div>
 
-        <!-- CONTACT -->
-        <div id="contact" class="card">
-          <h4>Contact</h4>
+        <div id="contact" class="card" aria-labelledby="contact-heading">
+          <h4 id="contact-heading">Contact</h4>
           <div class="muted">Email: arshvanthv@gmail.com</div>
           <div class="muted">Phone: +91 96770 26197</div>
 
-          <a class="btn primary" href="mailto:arshvanthv@gmail.com" target="_blank" style="margin-top:12px;">Email Me</a>
+          <!-- Inline form that opens user's email client via mailto -->
+          <form id="contact-form" style="margin-top:12px">
+            <div class="form-row">
+              <input id="name" class="input" type="text" placeholder="Your name" required />
+            </div>
+            <div class="form-row" style="margin-top:8px">
+              <input id="email" class="input" type="email" placeholder="Your email" required />
+            </div>
+            <div style="margin-top:8px">
+              <textarea id="message" placeholder="Write your message..." required></textarea>
+            </div>
+            <div class="form-row" style="margin-top:10px; justify-content:flex-start;">
+              <button type="submit" class="btn primary">Send message</button>
+              <a class="btn ghost" id="mailto-btn" href="mailto:arshvanthv@gmail.com" target="_blank" rel="noopener">Email me</a>
+            </div>
+            <div id="form-note" class="small" style="margin-top:8px">The form will open your email client to send the message (no server required).</div>
+          </form>
         </div>
 
       </aside>
-
     </div>
 
-    <footer>
-      © 2025 — Arshvanth V. Portfolio for recruiters & opportunities.
-    </footer>
-
+    <footer>© 2025 — Arshvanth V. Portfolio for job applications & recruiters.</footer>
   </div>
 
-  <!-- Load Projects -->
+  <!-- Scripts -->
   <script>
+    // --------------------------
+    // Projects data & rendering
+    // --------------------------
     const projects = [
-      {title: 'Community Health Evaluation (CodTech)', desc: 'Data cleaning, analysis of 10,000+ records; dashboards and insights.', repo: 'https://github.com/Arshvanth/Community-health-Evaluation---EDA'},
-      {title: 'Campus Recruitment Analysis (Hybritic Info)', desc: 'EDA across 5 years of data; automated report generation.', repo: 'https://github.com/Arshvanth/Campus-Recruitment'},
-      {title: 'Titanic Classification (CodeAlpha)', desc: 'Titanic survival prediction using ML & visualizations.', repo: 'https://github.com/Arshvanth/CodeAlpha_Project_Titanic-Classification'}
+      { title: 'Community Health Evaluation (CodTech)', desc: 'Data cleaning, EDA and dashboards for 10,000+ records; insights and recommendations.', repo: 'https://github.com/Arshvanth/Community-health-Evaluation---EDA' },
+      { title: 'Campus Recruitment Analysis (Hybritic Info)', desc: 'EDA, visualizations and automated reporting across 5 years of recruitment data.', repo: 'https://github.com/Arshvanth/Campus-Recruitment' },
+      { title: 'Titanic Classification (CodeAlpha)', desc: 'Survival prediction and visual story using ML & Plotly. Cleaned data and engineered features.', repo: 'https://github.com/Arshvanth/CodeAlpha_Project_Titanic-Classification' }
     ];
 
-    const container = document.getElementById('projects');
+    const projectsContainer = document.getElementById('projects-list');
     projects.forEach(p => {
-      const el = document.createElement('div');
+      const el = document.createElement('article');
       el.className = 'project';
       el.innerHTML = `
-        <h4>${p.title}</h4>
-        <div class="muted">${p.desc}</div>
-        <div style="margin-top:10px">
-          <a class="btn primary" href="${p.repo}" target="_blank">View on GitHub</a>
-        </div>`;
-      container.appendChild(el);
+        <h4 style="margin:0 0 6px">${escapeHtml(p.title)}</h4>
+        <div class="muted" style="font-size:13px">${escapeHtml(p.desc)}</div>
+        <div style="margin-top:10px"><a class="btn primary" href="${p.repo}" target="_blank" rel="noopener">View on GitHub</a></div>
+      `;
+      projectsContainer.appendChild(el);
     });
-  </script>
 
+    // simple escape to avoid accidental template injection
+    function escapeHtml(s){ return (s+'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+    // --------------------------
+    // Background switcher
+    // --------------------------
+    const bgButtons = document.querySelectorAll('.bg-btn');
+    bgButtons.forEach(btn => btn.addEventListener('click', () => {
+      bgButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const mode = btn.getAttribute('data-mode');
+      document.body.classList.remove('mode-gradient','mode-particles','mode-neon');
+      document.body.classList.add(mode);
+      // accessibility: announce
+      btn.setAttribute('aria-pressed','true');
+    }));
+
+    // init: set body class to match default active
+    (function initMode(){
+      const active = document.querySelector('.bg-btn.active');
+      if(active) document.body.classList.add(active.getAttribute('data-mode'));
+    })();
+
+    // --------------------------
+    // Contact form -> mailto
+    // --------------------------
+    const form = document.getElementById('contact-form');
+    const mailtoBtn = document.getElementById('mailto-btn');
+
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const fromEmail = document.getElementById('email').value.trim();
+      const message = document.getElementById('message').value.trim();
+
+      if(!name || !fromEmail || !message){
+        alert('Please fill all fields before sending.');
+        return;
+      }
+
+      const subject = `Portfolio message from ${name}`;
+      const body = `Name: ${name}%0D%0AEmail: ${encodeURIComponent(fromEmail)}%0D%0A%0D%0AMessage:%0D%0A${encodeURIComponent(message)}`;
+
+      // open user's default mail client
+      const mailto = `mailto:arshvanthv@gmail.com?subject=${encodeURIComponent(subject)}&body=${body}`;
+      window.location.href = mailto;
+    });
+
+    // mailto quick button (in case someone prefers direct)
+    mailtoBtn.addEventListener('click', (e) => {
+      // default anchor works; we don't need to override
+    });
+
+    // --------------------------
+    // Small enhancement: reduce motion for users who set it
+    // --------------------------
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if(mq.matches){
+      document.body.style.transition = 'none';
+      document.body.classList.remove('mode-gradient'); // avoid animation
+    }
+  </script>
 </body>
 </html>
