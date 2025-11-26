@@ -13,6 +13,7 @@
       --border: rgba(255,255,255,0.12);
       --accent1:#7c3aed;
       --accent2:#06b6d4;
+      --call-bg: linear-gradient(90deg,#10b981,#059669);
     }
     *{box-sizing:border-box;margin:0;padding:0}
     html,body{height:100%}
@@ -26,9 +27,7 @@
       transition:background 400ms ease;
     }
 
-    /* -------------------------
-       Background mode classes
-       ------------------------- */
+    /* animated gradient background (default) */
     body.mode-gradient{
       background: linear-gradient(120deg,#08102a,#071a3a,#071a3a);
       background-size:400% 400%;
@@ -41,30 +40,7 @@
     }
 
     .particles-layer{ position:fixed; inset:0; pointer-events:none; z-index:-1; opacity:0; transition:opacity 300ms;}
-    body.mode-particles .particles-layer{ opacity:1 }
-    .particles-layer::before,
-    .particles-layer::after{
-      content:""; position:absolute; inset:0;
-      background-repeat:no-repeat;
-      background-size:cover;
-      mix-blend-mode: screen;
-      filter: blur(36px) saturate(120%);
-    }
-    .particles-layer::before{
-      background-image:
-        radial-gradient(circle at 10% 20%, rgba(124,58,237,0.18) 0 8%, transparent 20%),
-        radial-gradient(circle at 80% 70%, rgba(6,182,212,0.14) 0 12%, transparent 24%);
-      transform:translateY(-20px);
-      opacity:0.95;
-    }
-    .particles-layer::after{
-      background-image: radial-gradient(circle at 40% 40%, rgba(255,255,255,0.03), transparent 30%);
-      transform:translateY(10px);
-      opacity:0.55;
-    }
-
     .neon-blob { position:fixed; border-radius:50%; filter:blur(110px); opacity:0; z-index:-2; transition:opacity 300ms;}
-    body.mode-neon .neon-blob{ opacity:1 }
     .blob-a{ width:520px;height:520px; background:var(--accent1); top:-160px; left:-160px; }
     .blob-b{ width:420px;height:420px; background:var(--accent2); bottom:-140px; right:-120px; opacity:0.7 }
 
@@ -81,10 +57,6 @@
     nav{ display:flex; gap:10px; align-items:center; flex-shrink:0; }
     nav a{ color:var(--muted); padding:8px 10px; border-radius:8px; transition: background .18s; font-weight:600; font-size:13px; }
     nav a:hover{ background: rgba(255,255,255,0.04); color: #fff }
-
-    .bg-switcher{ display:flex; gap:8px; }
-    .bg-btn{ padding:8px 10px; border-radius:8px; font-weight:700; cursor:pointer; background:rgba(255,255,255,0.03); color:var(--muted); border:1px solid transparent }
-    .bg-btn.active{ background:linear-gradient(90deg,var(--accent1),var(--accent2)); color:#fff; box-shadow:0 6px 22px rgba(4,12,32,0.45) }
 
     .controls-row{ display:flex; gap:10px; align-items:center; margin-top:8px; flex-wrap:wrap; }
 
@@ -110,12 +82,10 @@
     textarea{ min-height:110px; resize:vertical }
     .small{ font-size:13px; color:var(--muted) }
 
-    /* Checkbox styles */
     .checkbox-row{ display:flex; align-items:center; gap:10px; margin-top:8px; }
     .checkbox-row input[type="checkbox"]{ width:18px; height:18px; accent-color: #7c3aed; cursor:pointer; }
-    .phone-group{ display:none; gap:8px; margin-top:8px; align-items:center }
+    .phone-group{ display:none; gap:8px; margin-top:8px; align-items:center; }
 
-    /* call-now button (tel) */
     .call-now{ display:inline-block; padding:8px 12px; border-radius:8px; background:rgba(255,255,255,0.03); color:var(--muted); border:1px solid rgba(255,255,255,0.04); text-decoration:none; margin-left:8px; }
 
     footer{ margin-top:36px; text-align:center; color:var(--muted); font-size:13px; }
@@ -130,22 +100,50 @@
       h1{ font-size:20px }
       .left{ gap:12px }
       .controls-row{ width:100% }
-      .bg-switcher{ order:2; width:100% }
     }
 
-    a:focus, button:focus, .bg-btn:focus { outline:3px solid rgba(124,58,237,0.18); outline-offset:2px; }
+    a:focus, button:focus { outline:3px solid rgba(124,58,237,0.18); outline-offset:2px; }
+
+    /* immediate call sticky */
+    .immediate-call-wrap{
+      position:fixed;
+      right:20px;
+      bottom:20px;
+      z-index:9999;
+      display:flex;
+      gap:8px;
+      align-items:center;
+      pointer-events:auto;
+    }
+    .immediate-call{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:12px 16px;
+      border-radius:999px;
+      background:linear-gradient(90deg,#10b981,#059669);
+      color:#fff;
+      font-weight:700;
+      box-shadow:0 12px 30px rgba(6,30,20,0.35);
+      text-decoration:none;
+      transition:transform .12s ease, box-shadow .12s ease;
+    }
+    .immediate-call small{ display:block; font-weight:600; font-size:12px; opacity:0.95 }
+    .immediate-call .icon{ width:38px; height:38px; border-radius:50%; background:rgba(255,255,255,0.12); display:inline-flex; align-items:center; justify-content:center; }
+
+    @media (max-width:520px){
+      .immediate-call-wrap{ left:50%; right:auto; transform:translateX(-50%); bottom:14px; }
+    }
   </style>
 </head>
 <body class="mode-gradient">
 
-  <!-- Background decoration layers -->
+  <!-- decorative layers -->
   <div class="particles-layer" aria-hidden="true"></div>
   <div class="neon-blob blob-a" aria-hidden="true"></div>
   <div class="neon-blob blob-b" aria-hidden="true"></div>
 
   <div class="wrap" role="main">
-
-    <!-- Header -->
     <header>
       <div class="left">
         <div class="avatar card"><img src="assets/photo.jpg" alt="Arshvanth V — photo"></div>
@@ -157,11 +155,7 @@
           <div class="controls-row">
             <a class="btn primary" href="assets/Arshvanth_V_Resume.pdf" download>Download Resume</a>
             <a class="btn ghost" href="https://www.linkedin.com/in/arshvanth-v" target="_blank" rel="noopener">LinkedIn</a>
-            <div class="bg-switcher" style="margin-left:8px" role="tablist" aria-label="Background style switch">
-              <button class="bg-btn active" data-mode="mode-gradient" title="Animated gradient">Gradient</button>
-              <button class="bg-btn" data-mode="mode-particles" title="Floating particles">Particles</button>
-              <button class="bg-btn" data-mode="mode-neon" title="Neon glass (glassmorphism)">Neon</button>
-            </div>
+            <!-- background switch UI removed as requested -->
           </div>
         </div>
       </div>
@@ -173,12 +167,8 @@
       </nav>
     </header>
 
-    <!-- Content -->
     <div class="grid">
-
-      <!-- Main column -->
       <main>
-
         <section id="about" class="card" aria-labelledby="about-heading">
           <h3 id="about-heading">About Me</h3>
           <p class="muted" style="margin-top:8px">
@@ -205,12 +195,9 @@
           <h3 id="projects-heading">Selected Projects</h3>
           <div class="projects" id="projects-list" aria-live="polite"></div>
         </section>
-
       </main>
 
-      <!-- Sidebar -->
       <aside>
-
         <div class="card" aria-labelledby="resume-heading">
           <h4 id="resume-heading">Resume Preview</h4>
           <div class="resume-frame" style="margin-top:10px">
@@ -224,27 +211,17 @@
           <div class="muted">Email: arshvanthv@gmail.com</div>
           <div class="muted">Phone: +91 96770 26197</div>
 
-          <!-- Inline form that opens user's email client via mailto -->
           <form id="contact-form" style="margin-top:12px">
-            <div class="form-row">
-              <input id="name" class="input" type="text" placeholder="Your name" required />
-            </div>
-            <div class="form-row" style="margin-top:8px">
-              <input id="email" class="input" type="email" placeholder="Your email" required />
-            </div>
-            <div style="margin-top:8px">
-              <textarea id="message" placeholder="Write your message..." required></textarea>
-            </div>
+            <div class="form-row"><input id="name" class="input" type="text" placeholder="Your name" required /></div>
+            <div class="form-row" style="margin-top:8px"><input id="email" class="input" type="email" placeholder="Your email" required /></div>
+            <div style="margin-top:8px"><textarea id="message" placeholder="Write your message..." required></textarea></div>
 
-            <!-- NEW: checkbox to request a call -->
             <div class="checkbox-row" style="margin-top:10px">
               <input id="request-call" type="checkbox" />
               <label for="request-call" style="color:#e7f0fb"> I would like to schedule a call</label>
-              <!-- call-now quick link (disabled until phone entered) -->
               <a id="call-now" class="call-now" href="#" style="margin-left:auto; pointer-events:none; opacity:0.55">Call now</a>
             </div>
 
-            <!-- phone + preferred time (shown only when checkbox checked) -->
             <div class="phone-group" id="phone-group">
               <input id="phone" class="input-phone" type="tel" placeholder="Your phone number (include country code)" />
               <input id="pref-time" class="input-phone" type="text" placeholder="Preferred call time (e.g. Mon 3–5pm IST)" />
@@ -257,24 +234,30 @@
             <div id="form-note" class="small" style="margin-top:8px">The form will open your email client to send the message (no server required).</div>
           </form>
         </div>
-
       </aside>
     </div>
 
     <footer>© 2025 — Arshvanth V. Portfolio for job applications & recruiters.</footer>
   </div>
 
-  <!-- Scripts -->
+  <!-- immediate call button -->
+  <div class="immediate-call-wrap" aria-hidden="false">
+    <a id="immediate-call" class="immediate-call" href="tel:+919677026197" aria-label="Call Arshvanth now">
+      <span class="icon" aria-hidden="true">📞</span>
+      <div>
+        <span style="display:block">Call now</span>
+        <small>+91 96770 26197</small>
+      </div>
+    </a>
+  </div>
+
   <script>
-    // --------------------------
-    // Projects data & rendering
-    // --------------------------
+    // projects
     const projects = [
       { title: 'Community Health Evaluation (CodTech)', desc: 'Data cleaning, EDA and dashboards for 10,000+ records; insights and recommendations.', repo: 'https://github.com/Arshvanth/Community-health-Evaluation---EDA' },
       { title: 'Campus Recruitment Analysis (Hybritic Info)', desc: 'EDA, visualizations and automated reporting across 5 years of recruitment data.', repo: 'https://github.com/Arshvanth/Campus-Recruitment' },
       { title: 'Titanic Classification (CodeAlpha)', desc: 'Survival prediction and visual story using ML & Plotly. Cleaned data and engineered features.', repo: 'https://github.com/Arshvanth/CodeAlpha_Project_Titanic-Classification' }
     ];
-
     const projectsContainer = document.getElementById('projects-list');
     projects.forEach(p => {
       const el = document.createElement('article');
@@ -286,62 +269,51 @@
       `;
       projectsContainer.appendChild(el);
     });
-
     function escapeHtml(s){ return (s+'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
-    // --------------------------
-    // Background switcher
-    // --------------------------
-    const bgButtons = document.querySelectorAll('.bg-btn');
-    bgButtons.forEach(btn => btn.addEventListener('click', () => {
-      bgButtons.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const mode = btn.getAttribute('data-mode');
-      document.body.classList.remove('mode-gradient','mode-particles','mode-neon');
-      document.body.classList.add(mode);
-      btn.setAttribute('aria-pressed','true');
-    }));
+    // init gradient mode by default
+    document.body.classList.add('mode-gradient');
 
-    (function initMode(){
-      const active = document.querySelector('.bg-btn.active');
-      if(active) document.body.classList.add(active.getAttribute('data-mode'));
-    })();
-
-    // --------------------------
-    // Contact form -> mailto (with call checkbox)
-    // --------------------------
+    // contact + call logic
     const form = document.getElementById('contact-form');
-    const mailtoBtn = document.getElementById('mailto-btn');
     const requestCall = document.getElementById('request-call');
     const phoneGroup = document.getElementById('phone-group');
     const phoneInput = document.getElementById('phone');
     const prefTime = document.getElementById('pref-time');
     const callNow = document.getElementById('call-now');
+    const immediateCall = document.getElementById('immediate-call');
+    const defaultPhone = '+919677026197';
 
-    // show/hide phone inputs when checkbox toggled
     requestCall.addEventListener('change', () => {
       if(requestCall.checked){
         phoneGroup.style.display = 'flex';
         phoneGroup.style.flexDirection = 'column';
-        phoneGroup.querySelectorAll('input').forEach(i => i.required = false); // optional but visible
       } else {
         phoneGroup.style.display = 'none';
       }
     });
 
-    // enable call-now link when valid phone typed
     phoneInput.addEventListener('input', () => {
       const num = phoneInput.value.trim();
       if(num.length >= 7){
         callNow.style.pointerEvents = 'auto';
         callNow.style.opacity = '1';
         callNow.href = `tel:${encodeURIComponent(num)}`;
+        immediateCall.href = `tel:${encodeURIComponent(num)}`;
+        immediateCall.querySelector('small').textContent = num;
       } else {
         callNow.style.pointerEvents = 'none';
         callNow.style.opacity = '0.55';
         callNow.href = '#';
+        immediateCall.href = `tel:${defaultPhone}`;
+        immediateCall.querySelector('small').textContent = defaultPhone.replace('+','');
       }
     });
+
+    (function initImmediateCall(){
+      immediateCall.href = `tel:${defaultPhone}`;
+      immediateCall.querySelector('small').textContent = defaultPhone.replace('+','');
+    })();
 
     form.addEventListener('submit', function(e){
       e.preventDefault();
@@ -369,16 +341,11 @@
       window.location.href = mailto;
     });
 
-    // mailto quick button (just opens mail client)
-    mailtoBtn.addEventListener('click', (e) => { /* no-op, anchor handles it */ });
-
-    // --------------------------
-    // Reduce motion pref
-    // --------------------------
+    // respect reduced motion
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
     if(mq.matches){
       document.body.style.transition = 'none';
-      document.body.classList.remove('mode-gradient'); // avoid animation
+      document.body.classList.remove('mode-gradient');
     }
   </script>
 </body>
