@@ -29,7 +29,6 @@
     /* -------------------------
        Background mode classes
        ------------------------- */
-    /* default: animated gradient */
     body.mode-gradient{
       background: linear-gradient(120deg,#08102a,#071a3a,#071a3a);
       background-size:400% 400%;
@@ -41,7 +40,6 @@
       100%{background-position:0% 50%}
     }
 
-    /* particles overlay */
     .particles-layer{ position:fixed; inset:0; pointer-events:none; z-index:-1; opacity:0; transition:opacity 300ms;}
     body.mode-particles .particles-layer{ opacity:1 }
     .particles-layer::before,
@@ -65,13 +63,11 @@
       opacity:0.55;
     }
 
-    /* neon blobs (glassmorphism) */
     .neon-blob { position:fixed; border-radius:50%; filter:blur(110px); opacity:0; z-index:-2; transition:opacity 300ms;}
     body.mode-neon .neon-blob{ opacity:1 }
     .blob-a{ width:520px;height:520px; background:var(--accent1); top:-160px; left:-160px; }
     .blob-b{ width:420px;height:420px; background:var(--accent2); bottom:-140px; right:-120px; opacity:0.7 }
 
-    /* overall page wrapper */
     .wrap{ max-width:1100px; margin:36px auto; padding:0 18px; position:relative; z-index:1; }
 
     header{ display:flex; flex-wrap:wrap; gap:18px; align-items:center; justify-content:space-between; }
@@ -86,7 +82,6 @@
     nav a{ color:var(--muted); padding:8px 10px; border-radius:8px; transition: background .18s; font-weight:600; font-size:13px; }
     nav a:hover{ background: rgba(255,255,255,0.04); color: #fff }
 
-    /* background switcher */
     .bg-switcher{ display:flex; gap:8px; }
     .bg-btn{ padding:8px 10px; border-radius:8px; font-weight:700; cursor:pointer; background:rgba(255,255,255,0.03); color:var(--muted); border:1px solid transparent }
     .bg-btn.active{ background:linear-gradient(90deg,var(--accent1),var(--accent2)); color:#fff; box-shadow:0 6px 22px rgba(4,12,32,0.45) }
@@ -97,7 +92,6 @@
     .btn.primary{ background:linear-gradient(90deg,var(--accent1),var(--accent2)); color:#fff; border: none; }
     .btn.ghost{ background:transparent; color:var(--muted); border:1px solid rgba(255,255,255,0.04); }
 
-    /* layout grid */
     .grid{ display:grid; grid-template-columns: 1fr 320px; gap:20px; margin-top:28px; align-items:start; }
     main, aside{ display:flex; flex-direction:column; gap:14px; }
 
@@ -107,18 +101,25 @@
     .project{ padding:12px; border-radius:12px; background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)); transition:transform .16s ease, box-shadow .16s ease; border:1px solid rgba(255,255,255,0.04) }
     .project:hover{ transform:translateY(-6px); box-shadow:0 10px 30px rgba(2,6,23,0.6) }
 
-    /* resume preview */
     .resume-frame{ height:320px; overflow:hidden; border-radius:12px; background:rgba(255,255,255,0.02); display:block }
 
-    /* contact form */
     .form-row{ display:flex; gap:10px; margin-top:8px; flex-wrap:wrap }
-    .input, textarea{ width:100%; padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.06); background:rgba(0,0,0,0.18); color:#fff; outline:none; font-size:14px }
+    .input, textarea, .input-phone{
+      width:100%; padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.06); background:rgba(0,0,0,0.18); color:#fff; outline:none; font-size:14px
+    }
     textarea{ min-height:110px; resize:vertical }
     .small{ font-size:13px; color:var(--muted) }
 
+    /* Checkbox styles */
+    .checkbox-row{ display:flex; align-items:center; gap:10px; margin-top:8px; }
+    .checkbox-row input[type="checkbox"]{ width:18px; height:18px; accent-color: #7c3aed; cursor:pointer; }
+    .phone-group{ display:none; gap:8px; margin-top:8px; align-items:center }
+
+    /* call-now button (tel) */
+    .call-now{ display:inline-block; padding:8px 12px; border-radius:8px; background:rgba(255,255,255,0.03); color:var(--muted); border:1px solid rgba(255,255,255,0.04); text-decoration:none; margin-left:8px; }
+
     footer{ margin-top:36px; text-align:center; color:var(--muted); font-size:13px; }
 
-    /* responsive */
     @media (max-width:880px){
       .grid{ grid-template-columns: 1fr; }
       header{ flex-direction:column; align-items:flex-start; gap:14px }
@@ -132,7 +133,6 @@
       .bg-switcher{ order:2; width:100% }
     }
 
-    /* accessible focus styles */
     a:focus, button:focus, .bg-btn:focus { outline:3px solid rgba(124,58,237,0.18); outline-offset:2px; }
   </style>
 </head>
@@ -235,6 +235,21 @@
             <div style="margin-top:8px">
               <textarea id="message" placeholder="Write your message..." required></textarea>
             </div>
+
+            <!-- NEW: checkbox to request a call -->
+            <div class="checkbox-row" style="margin-top:10px">
+              <input id="request-call" type="checkbox" />
+              <label for="request-call" style="color:#e7f0fb"> I would like to schedule a call</label>
+              <!-- call-now quick link (disabled until phone entered) -->
+              <a id="call-now" class="call-now" href="#" style="margin-left:auto; pointer-events:none; opacity:0.55">Call now</a>
+            </div>
+
+            <!-- phone + preferred time (shown only when checkbox checked) -->
+            <div class="phone-group" id="phone-group">
+              <input id="phone" class="input-phone" type="tel" placeholder="Your phone number (include country code)" />
+              <input id="pref-time" class="input-phone" type="text" placeholder="Preferred call time (e.g. Mon 3–5pm IST)" />
+            </div>
+
             <div class="form-row" style="margin-top:10px; justify-content:flex-start;">
               <button type="submit" class="btn primary">Send message</button>
               <a class="btn ghost" id="mailto-btn" href="mailto:arshvanthv@gmail.com" target="_blank" rel="noopener">Email me</a>
@@ -272,7 +287,6 @@
       projectsContainer.appendChild(el);
     });
 
-    // simple escape to avoid accidental template injection
     function escapeHtml(s){ return (s+'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
     // --------------------------
@@ -285,21 +299,49 @@
       const mode = btn.getAttribute('data-mode');
       document.body.classList.remove('mode-gradient','mode-particles','mode-neon');
       document.body.classList.add(mode);
-      // accessibility: announce
       btn.setAttribute('aria-pressed','true');
     }));
 
-    // init: set body class to match default active
     (function initMode(){
       const active = document.querySelector('.bg-btn.active');
       if(active) document.body.classList.add(active.getAttribute('data-mode'));
     })();
 
     // --------------------------
-    // Contact form -> mailto
+    // Contact form -> mailto (with call checkbox)
     // --------------------------
     const form = document.getElementById('contact-form');
     const mailtoBtn = document.getElementById('mailto-btn');
+    const requestCall = document.getElementById('request-call');
+    const phoneGroup = document.getElementById('phone-group');
+    const phoneInput = document.getElementById('phone');
+    const prefTime = document.getElementById('pref-time');
+    const callNow = document.getElementById('call-now');
+
+    // show/hide phone inputs when checkbox toggled
+    requestCall.addEventListener('change', () => {
+      if(requestCall.checked){
+        phoneGroup.style.display = 'flex';
+        phoneGroup.style.flexDirection = 'column';
+        phoneGroup.querySelectorAll('input').forEach(i => i.required = false); // optional but visible
+      } else {
+        phoneGroup.style.display = 'none';
+      }
+    });
+
+    // enable call-now link when valid phone typed
+    phoneInput.addEventListener('input', () => {
+      const num = phoneInput.value.trim();
+      if(num.length >= 7){
+        callNow.style.pointerEvents = 'auto';
+        callNow.style.opacity = '1';
+        callNow.href = `tel:${encodeURIComponent(num)}`;
+      } else {
+        callNow.style.pointerEvents = 'none';
+        callNow.style.opacity = '0.55';
+        callNow.href = '#';
+      }
+    });
 
     form.addEventListener('submit', function(e){
       e.preventDefault();
@@ -308,25 +350,30 @@
       const message = document.getElementById('message').value.trim();
 
       if(!name || !fromEmail || !message){
-        alert('Please fill all fields before sending.');
+        alert('Please fill name, email and message before sending.');
         return;
       }
 
-      const subject = `Portfolio message from ${name}`;
-      const body = `Name: ${name}%0D%0AEmail: ${encodeURIComponent(fromEmail)}%0D%0A%0D%0AMessage:%0D%0A${encodeURIComponent(message)}`;
+      let body = `Name: ${name}%0D%0AEmail: ${encodeURIComponent(fromEmail)}%0D%0A%0D%0AMessage:%0D%0A${encodeURIComponent(message)}`;
 
-      // open user's default mail client
+      if(requestCall.checked){
+        const phone = phoneInput.value.trim();
+        const time = prefTime.value.trim();
+        body += `%0D%0A%0D%0ARequest: Please call me.`;
+        if(phone) body += `%0D%0APhone: ${encodeURIComponent(phone)}`;
+        if(time) body += `%0D%0APreferred time: ${encodeURIComponent(time)}`;
+      }
+
+      const subject = `Portfolio message from ${name}`;
       const mailto = `mailto:arshvanthv@gmail.com?subject=${encodeURIComponent(subject)}&body=${body}`;
       window.location.href = mailto;
     });
 
-    // mailto quick button (in case someone prefers direct)
-    mailtoBtn.addEventListener('click', (e) => {
-      // default anchor works; we don't need to override
-    });
+    // mailto quick button (just opens mail client)
+    mailtoBtn.addEventListener('click', (e) => { /* no-op, anchor handles it */ });
 
     // --------------------------
-    // Small enhancement: reduce motion for users who set it
+    // Reduce motion pref
     // --------------------------
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
     if(mq.matches){
